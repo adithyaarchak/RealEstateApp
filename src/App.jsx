@@ -4,9 +4,12 @@ import Signin from './pages/Signin'
 import SignUp from './pages/Signup'
 import About from './pages/About'
 import Profile from './pages/Profile'
+import Header from './Components/Header'
 const App = () => {
   return (
     <BrowserRouter> 
+    {/* so that the header will be in all the pages */}
+    <Header />
     <Routes>
       <Route path= "/" element = {<Home />}></Route>
       <Route path= "/sign-in" element = {<Signin />}></Route>
