@@ -7,7 +7,7 @@ export default function Header() {
       <div className="flex justify-between items-center max-w-8xl mx-auto p-6">
         {/* Link is used to direct you to the particular page which you click in navbar */}
         <Link to='/'>
-        <h1 className="font-bold text-sm sm:text-2xl flex flex-wrap">
+        <h1 className="font-bold text-xl sm:text-2xl flex flex-wrap">
           <span>Urban</span>
           <span>Nest</span>
         </h1>
