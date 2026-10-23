@@ -1,7 +1,8 @@
 import User from "../models/User.model.js";
 import bcryptjs from "bcryptjs";
+import { errorHandler } from "../utils/error.js";
 
-export const signup = async (req, res) => {
+export const signup = async (req, res, next) => {
   //taking the input of the user by req.body
   const { username, email, password } = req.body;
 
@@ -15,6 +16,8 @@ export const signup = async (req, res) => {
     await newUser.save();
     res.status(201).json("User created successfully");
   } catch (error) {
-    res.status(500).json(error.message);
+    // next is the middlerware which is written in index.js and called everywhere we need to handle the error
+    // first we need it to be called with req,res,next
+    next(error);
   }
 };
