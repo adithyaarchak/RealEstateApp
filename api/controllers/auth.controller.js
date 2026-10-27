@@ -44,9 +44,10 @@ export const signin = async (req,res,next) => {
       {id: validUser._id },process.env.JWT_SECRET
     );
 
-    //save the token as cookie
+    //save the token inside the cookie
     res.cookie('access_token',token,{httpsOnly:true})
     .status(200)
+    // we ger rest of evrything instead of password using(.json(rest))
     .json(rest);
   } catch (error) {
     next(error);
