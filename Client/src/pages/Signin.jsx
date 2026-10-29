@@ -1,11 +1,20 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState,} from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { signInStart,signInSuccess,signInFailure } from "../redux/user/userSlice";
+
 
 export default function Signup() {
   const [formData, setFormData] = useState({});
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(false);
+
+  // const [error, setError] = useState(null);
+  // const [loading, setLoading] = useState(false); instead use redux
+  const {loading, error }= useSelector((state) => state.user);
+
+
   const navigate = useNavigate();
+  // react-redux initialize
+  const dispatch = useDispatch();
 
   // user enters in the UI using this
   const handleChange = (e) => {
@@ -21,7 +30,8 @@ export default function Signup() {
     e.preventDefault();
 
     try {
-      setLoading(true);
+      // setLoading(true); instead
+      dispatch(signInStart());
       const res = await fetch("/api/auth/signin", {
         method: "POST",
         headers: {
@@ -35,19 +45,25 @@ export default function Signup() {
       // if user already have a account and
       // try to create account with the same cerdentical this block of code will throw the error
       if (data.success === false) {
-        setError(data.message);
-        setLoading(false);
+        // setError(data.message);
+        // setLoading(false); instead using redux
+        dispatch(signInFailure(data.message));
         return;
       }
-      setLoading(false);
-      console.log(data);
+      // setLoading(false);
+      // console.log(data); instead of this use redux 
+      dispatch(signInSuccess(data));
+
+
       //if everything is fine no need to displayy the error on screnn     
-      setError(null);
-      //it is used when u signed up in click it will automatcially navaigate to signin
+      // setError(null);
+      
+      // navigates to home once u signin in
       navigate('/');
     } catch (error) {
-      setLoading(false);
-      setError(error.message);
+      // setLoading(false);
+      // setError(error.message); instead use redux
+      dispatch(signInFailure(error.message));
     }
   };
 
