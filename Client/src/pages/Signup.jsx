@@ -1,5 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
-import { useState,} from "react";
+import { useState } from "react";
+import OAuth from "../Components/OAuth";
 
 export default function Signup() {
   const [formData, setFormData] = useState({});
@@ -41,10 +42,10 @@ export default function Signup() {
       }
       setLoading(false);
       console.log(data);
-      //if everything is fine no need to displayy the error on screnn     
+      //if everything is fine no need to displayy the error on screnn
       setError(null);
       //it is used when u signed up in click it will automatcially navaigate to signin
-      navigate('/sign-in');
+      navigate("/sign-in");
     } catch (error) {
       setLoading(false);
       setError(error.message);
@@ -87,6 +88,9 @@ export default function Signup() {
         >
           {loading ? "Loading..." : "sign Up"}
         </button>
+
+        {/* continue with google button */}
+        <OAuth />
       </form>
 
       <div className="flex gap-2 mt-5">
@@ -97,7 +101,6 @@ export default function Signup() {
       </div>
 
       {error && <p className="text-red-500 mt-5">{error}</p>}
-      
     </div>
   );
 }
