@@ -4,6 +4,8 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import userRouter from "./routes/user.route.js";
 import authRouter from "./routes/auth.route.js";
+import cookieParser from "cookie-parser";
+
 dotenv.config();
 
 mongoose
@@ -20,6 +22,9 @@ const app = express();
 // if we dont write this we will get {undefined} as error so therefore if we write this we will allow JSOn as the input of the server
 //middleware
 app.use(express.json());
+
+// cookie-parser
+app.use(cookieParser());
 
 //create an API
 app.use("/api/user", userRouter);

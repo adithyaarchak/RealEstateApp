@@ -1,2 +1,18 @@
 ****npm install redux-persist***
 once user logins if he refresh all the data will be gone to not to happen that we use -npm install redux-persist
+
+****npm install cookie-parser**** in route directory once it is installed initalize in index.js
+
+The cookie is like an envelope, and the token is the letter inside. cookie-parser opens the envelope so your server can read the letter.
+
+why it is used to verify user hy we use cookie-parser
+
+Because the token that proves who the user is lives in a cookie, and cookie-parser is what lets your server read it.
+
+The chain of reasoning
+
+1.After login, the server gives the browser a token (JWT) inside a cookie.
+2.The browser automatically sends that cookie with every request. This is how the server “remembers” the user, since HTTP itself has no memory between requests.
+3.The cookie arrives as one raw string in the Cookie header, like token=eyJhbGci...; theme=dark.
+To verify the user, your server needs just the token value so it can run jwt.verify() on it.
+4.cookie-parser converts that raw string into req.cookies.token, so you can grab it easily.
