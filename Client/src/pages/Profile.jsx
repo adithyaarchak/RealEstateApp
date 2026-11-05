@@ -1,6 +1,6 @@
 import { useSelector } from "react-redux";
 import { useEffect, useRef, useState } from "react";
-import { updateUserStart, updateUserSuccess, updateUserfailure } from "../redux/user/userSlice";
+import { deleteUserFailure, deleteUserStart, deleteUserSuccess, updateUserStart, updateUserSuccess, updateUserFailure, signOutStart,signOutFailure,signOutSuccess } from "../redux/user/userSlice";
 import { useDispatch } from "react-redux";
 
 
@@ -9,6 +9,7 @@ export default function Profile() {
   const [formData,setFormData] = useState({});
   const dispatch = useDispatch(); 
   const [updateSuccess, setUpdateSuccess] = useState(false);
+  const [deleteSuccess, setDeleteSuccess] = useState(false);
   
   //code used to update the profile from frontend
 
@@ -29,7 +30,7 @@ export default function Profile() {
     });
     const data = await res.json();
     if (data.success === false) {
-      dispatch(updateUserfailure(data.message));
+      dispatch(updateUserFailure(data.message));
       return;
     }
     dispatch(updateUserSuccess(data));
@@ -38,10 +39,44 @@ export default function Profile() {
     setUpdateSuccess(true);
   } catch (error) {
     console.log(error);
-    dispatch(updateUserfailure(error.message));
+    dispatch(updateUserFailure(error.message));
+
   }
 };
 
+// delete user from the front-end
+const handleDeleteUser = async () => {
+  try {
+    dispatch(deleteUserStart());
+    const res = await fetch(`/api/user/delete/${currentUser._id}`,{
+      method: 'DELETE',
+    });
+    const data = await res.json();
+    if(data.success === false) {
+      dispatch(deleteUserFailure(data.message));
+      return;
+    }
+    dispatch(deleteUserSuccess(data));
+    setDeleteSuccess(true)
+  } catch (error) {
+    dispatch(deleteUserFailure(error.message));
+  }
+}
+//signout in 
+const handleSignOut = async () => {
+  try {
+    dispatch(signOutStart());
+    const res = await fetch('/api/auth/signout', { method: 'GET' });
+    const data = await res.json();
+    if (data.success === false) {
+      dispatch(signOutFailure(data.message));
+      return;
+    }
+    dispatch(signOutSuccess(data));
+  } catch (error) {
+    dispatch(signOutFailure(error.message));
+  }
+};
   return (
     <div className="p-3 max-w-lg mx-auto">
       <h1 className="text-3xl font-semibold text-center my-7">Profile</h1>
@@ -85,15 +120,32 @@ export default function Profile() {
           {loading ? 'Loading...' : 'Update'}
         </button>
       </form>
-      {/* delete and sign-out button */}
+      {/* delete  button */}
       <div className="flex justify-between mt-5">
-        <span className="text-red-700 cursor-pointer">Delete account</span>
-        <span className="text-red-700 cursor-pointer">Sign out</span>
+        <span 
+          className="text-red-700 cursor-pointer"
+          onClick={handleDeleteUser}
+        >
+          Delete account
+        </span>
+
+
+      {/* sign out button */}
+      <span 
+        onClick={handleSignOut}
+        className="text-red-700 cursor-pointer"
+      >
+        Sign out
+      </span>
+
+
       </div>
       {/* if the user is not authorized for updating  */}
       <p className="text-red-700 mt-5">{error ? error : ''}</p>
       {/* if user updated sucessfully */}
       <p className="text-green-700 mt-5">{updateSuccess ? 'User is updated successfully!' : ''}</p>
+      {/* if account deleted successfully */}
+      <p className="text-red-800 mt-5">{deleteSuccess ? 'User deleted successfully' : ''}</p>
     </div>
   );
 }
