@@ -2,6 +2,7 @@ import { useSelector } from "react-redux";
 import { useEffect, useRef, useState } from "react";
 import { deleteUserFailure, deleteUserStart, deleteUserSuccess, updateUserStart, updateUserSuccess, updateUserFailure, signOutStart,signOutFailure,signOutSuccess } from "../redux/user/userSlice";
 import { useDispatch } from "react-redux";
+import {Link} from "react-router-dom"
 
 
 export default function Profile() {
@@ -119,6 +120,15 @@ const handleSignOut = async () => {
           {/* loading interface when we click on the update button */}
           {loading ? 'Loading...' : 'Update'}
         </button>
+
+        {/* create listing button */}
+        <Link 
+          to={"/create-listing"}
+          className="bg-green-700 text-white p-3 uppercase text-center opacity-95 rounded-lg"
+        >
+          Create Listing
+        </Link>
+
       </form>
       {/* delete  button */}
       <div className="flex justify-between mt-5">
