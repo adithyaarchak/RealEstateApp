@@ -16,3 +16,7 @@ The chain of reasoning
 3.The cookie arrives as one raw string in the Cookie header, like token=eyJhbGci...; theme=dark.
 To verify the user, your server needs just the token value so it can run jwt.verify() on it.
 4.cookie-parser converts that raw string into req.cookies.token, so you can grab it easily.
+
+
+*****npm i image kit****
+to store the images which has been uploaded

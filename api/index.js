@@ -6,6 +6,7 @@ import userRouter from "./routes/user.route.js";
 import authRouter from "./routes/auth.route.js";
 import listingRouter from "./routes/listing.route.js"
 import cookieParser from "cookie-parser";
+import uploadRouter from "./routes/upload.route.js";
 
 dotenv.config();
 
@@ -33,6 +34,9 @@ app.use("/api/auth", authRouter);
 
 // adding create list functionality
 app.use("/api/listing",listingRouter);
+
+//to upload the image
+app.use("/api/upload", uploadRouter);
 
 //create a middleware to handle the error
 app.use((err, req, res, next) => {
