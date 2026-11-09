@@ -30,7 +30,7 @@ export const deleteListing = async (req, res, next) => {
 };
 
 
-//create update listing API route
+//create update listing API route - edit from the profile 
 export const updateListing = async (req, res, next) => {
   const listing = await Listing.findById(req.params.id);
   if (!listing) {
@@ -52,4 +52,16 @@ export const updateListing = async (req, res, next) => {
   }
 };
 
+//this controler code is used to make sure that when user clicks in the edit profile and the information should be alrready present to edit 
+export const getListings = async (req, res, next) => {
+  try {
+    const listing = await Listing.findById(req.params.id);
+    if (!listing) {
+      return next(errorHandler(404, 'Listing not found!'));
+    }
+    res.status(200).json(listing);
+  } catch (error) {
+    next(error);
+  }
+};
 
