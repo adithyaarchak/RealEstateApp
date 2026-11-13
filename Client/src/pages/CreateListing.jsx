@@ -1,6 +1,8 @@
 import { userRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+
+import imageCompression from "browser-image-compression";
 export default function CreateListing() {
   const [files, setFiles] = useState([]);
   const navigate = useNavigate();
@@ -28,6 +30,7 @@ export default function CreateListing() {
   // This function runs when the user clicks the upload button.
   //  It checks the images, uploads them all, and saves the URLs.
   const handleImageSubmit = async (e) => {
+    console.log("Files being uploaded:", Array.from(files).map((f) => f.name));
     /*
     Check the rules.
     If no image is selected, show an alert and stop.
@@ -57,37 +60,35 @@ export default function CreateListing() {
     }
   };
   // This function uploads one image to ImageKit and gives you back its URL.
-  const uploadToImageKit = async (file) => {
-    // fresh signature for every file (tokens are single-use)
-    const auth = await fetch("/api/upload/imagekit-auth").then((r) => r.json());
+ const uploadToImageKit = async (file) => {
+  // NEW: shrink the image first (~9 MB -> ~300-500 KB)
+  const compressed = await imageCompression(file, {
+  maxSizeMB: 1.5,            // was 0.5
+  maxWidthOrHeight: 2560,    // was 1920, helps on big/retina screens
+  initialQuality: 0.85,      // start from higher quality
+  useWebWorker: true,
+});
 
-    // This builds the package of data that gets sent to ImageKit.
-    /*
-    file: the actual image
-    fileName: the image’s original name (e.g. house.jpg)
-    publicKey: your ImageKit public key, which tells ImageKit which account this is for
-    signature, expire, token: the temporary pass from your server, proving the upload is allowed
-    folder: where to store it in ImageKit (/listings)
-     */
-    const formData = new FormData();
-    console.log("publicKey:", import.meta.env.VITE_IMAGEKIT_PUBLIC_KEY);
-    formData.append("file", file);
-    formData.append("fileName", file.name);
-    formData.append("publicKey", import.meta.env.VITE_IMAGEKIT_PUBLIC_KEY);
-    formData.append("signature", auth.signature);
-    formData.append("expire", auth.expire);
-    formData.append("token", auth.token);
-    formData.append("folder", "/listings");
+  // fresh signature for every file (tokens are single-use)
+  const auth = await fetch("/api/upload/imagekit-auth").then((r) => r.json());
 
-    const res = await fetch("https://upload.imagekit.io/api/v1/files/upload", {
-      method: "POST",
-      body: formData,
-    });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.message || "Upload failed");
-    return data.url;
-  };
+  const formData = new FormData();
+  formData.append("file", compressed, file.name); // CHANGED: send compressed file
+  formData.append("fileName", file.name);
+  formData.append("publicKey", import.meta.env.VITE_IMAGEKIT_PUBLIC_KEY);
+  formData.append("signature", auth.signature);
+  formData.append("expire", auth.expire);
+  formData.append("token", auth.token);
+  formData.append("folder", "/listings");
 
+  const res = await fetch("https://upload.imagekit.io/api/v1/files/upload", {
+    method: "POST",
+    body: formData,
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.message || "Upload failed");
+  return data.url;
+};
   // handles the remove image functionality
   const handleRemoveImage = (index) => {
     setImageUrls((prev) => prev.filter((_, i) => i !== index));
