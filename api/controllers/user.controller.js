@@ -65,6 +65,8 @@ export const getUserListings = async (req, res, next) => {
   }
 };
 
+
+//for used to contact the landlord button 
 export const getUser = async (req, res, next) => {
   try {
     

@@ -22,6 +22,7 @@ export default function Contact({ listing }) {
   }, [listing.userRef]);
   return (
     <>
+    {/* if landlord then show it */}
       {landlord && (
         <div className='flex flex-col gap-2'>
           <p>
