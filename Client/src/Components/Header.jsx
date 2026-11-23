@@ -30,7 +30,7 @@ export default function Header() {
         {/* Link is used to direct you to the particular page which you click in navbar */}
         <Link to="/">
           <h1 className="font-bold text-xl sm:text-2xl flex flex-wrap">
-            <span>Urban</span>
+            <span className="text-slate-600">Urban</span>
             <span>Nest</span>
           </h1>
         </Link>
