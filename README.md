@@ -184,7 +184,3 @@ Contributions are welcome! Fork the repo, create a feature branch, and open a pu
 ## 📄 License
 
 This project is licensed under the ISC License.
-
-## 👤 Author
-
-**Adihtya** – [GitHub](https://github.com/<your-username>)<img width="1908" height="916" alt="image" src="https://github.com/user-attachments/assets/92bbf339-7bf7-43be-aec2-ead17092b40f" />
